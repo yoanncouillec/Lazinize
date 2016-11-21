@@ -5,51 +5,54 @@ OCaml evaluation strategy is called *call by value*, or more generally
 precisely *call by need*, or more generally *lazy evaluation*.
 
 In *call by value* strategy, arguments of a function call are
-evaluated *before* the function body evaluation.
+evaluated *before* the function body evaluation. In *call by name*
+strategy, arguments are evaluated once they are used during the
+function body evaluation. *call by value* is more efficient while
+*call by name* avoids code to diverge.
 
-In *call by name* strategy, arguments are evaluated once they are used
-during the function body evaluation.
+For instance, such expression:
 
+```haskell
+omega = (\x -> x x) (\x -> x x)
+foo (x, y) = y 
+```
 
+will diverge in OCaml while it will not in Haskell.
 
-## MongoManager
+## Lazinize
 
-MongoManager is a Python library launching, stopping, managing MongoDB cluster in a few lines of code.
+Lazinize show you how to transform OCaml evalution strategy into Haskell one.
 
-* **Easy:** Just one class to start and manage a whole MongoDB cluster.
-* **Flexible:** Can creates mongod/s processes or plug on them.
-* **Clear:** Every step is clearly mentionned in a log or at the screen.
+It models a minimalistic pure functional programming language:
+
+```ocaml
+type term = TVar of int
+	  | TLam of term
+	  | TApp of term * term
+```
+
+where values are closure:
+
+```ocaml
+type value = VClos of term * env
+and env = value list
+```
+
+The function `be_lazy` transforms a `term` into another one, but lazinized.
 
 ## Examples
 
-```python
-# Prepare data and log directories
-cluster = MongoCluster().initialize()
-
-# Start the whole cluster on all wanted machines
-cluster.start()
-
-# Stop the cluster
-cluster.stop()
-
-# Clean the directories
-cluster.clean()
-
+```
+let _ = 
+  let omega = (TApp (TLam (TApp (TVar 1, TVar 1)), 
+		     TLam (TApp (TVar 1, TVar 1)))) in
+  let t = TApp (TLam (TLam (TVar 1)), omega) in
+  exec t
 ```
 
-This example will start a cluster with default configuration (1 config replica set, 2 data replica sets, with a replica factor of 3).
-
-```python
-# One line style
-cluster = MongoCluster.initialize().start()
-cluster.stop().clean()
-```
-
-## Installation
-
-It's a python module. Import it.
+This example shows that the execution does not diverge as excepted in
+*call by value* languages.
 
 ## License
 
-MongoManager is made under the terms of the MIT license.
-
+CallByValue is made under the terms of the MIT license.
