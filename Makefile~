@@ -1,8 +1,0 @@
-cbn.out: cbn.ml
-	ocamlc $^ -o $@
-
-clean:
-	rm -rf cbn.out
-
-mrproper: clean
-	rm -rf *~
