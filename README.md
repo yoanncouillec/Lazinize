@@ -55,4 +55,4 @@ This example shows that the execution does not diverge as excepted in
 
 ## License
 
-CallByValue is made under the terms of the MIT license.
+Lazinize is made under the terms of the MIT license.
