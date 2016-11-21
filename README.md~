@@ -21,7 +21,7 @@ Will diverge in OCaml while it will not in Haskell.
 
 ## Lazinize
 
-Lazinize show you how to transform OCaml evaluation strategy into
+Lazinize show you how to transform OCaml evalution strategy into
 Haskell one. It models a minimalistic pure functional programming
 language:
 
@@ -47,7 +47,7 @@ let _ =
   let omega = (TApp (TLam (TApp (TVar 1, TVar 1)), 
 		     TLam (TApp (TVar 1, TVar 1)))) in
   let t = TApp (TLam (TLam (TVar 1)), omega) in
-  eval (be_lazy t) []
+  exec t
 ```
 
 This example shows that the execution does not diverge as excepted in
