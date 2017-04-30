@@ -27,11 +27,11 @@ let rec env_lookup env n =
   | _ -> failwith "env_lookup : no such binding"
 
 (* "LAZINIZE" *)
-let rec be_lazy t =
+let rec lazinize t =
   match t with
   | TVar n -> TApp (TVar n, TLam (TVar 0))
-  | TApp (t1, t2) -> TApp (be_lazy t1, TLam (be_lazy (inc_free 0 t2)))
-  | TLam (t1) -> TLam (be_lazy t1)
+  | TApp (t1, t2) -> TApp (lazinize t1, TLam (lazinize (inc_free 0 t2)))
+  | TLam (t1) -> TLam (lazinize t1)
 
 and inc_free m = function
   | TVar n when n > m -> TVar (n + 1)
@@ -49,7 +49,7 @@ let rec eval t env =
        | (VClos (cbody, cenv), v2) -> eval cbody (v2 :: cenv)
 
 let exec t = 
-  let lazy_t = be_lazy t in
+  let lazy_t = lazinize t in
   let result = eval lazy_t [] in
   print_endline ("initial term = " ^ (string_of_term t)) ;
   print_endline ("be lazy baby = " ^ (string_of_term lazy_t)) ;

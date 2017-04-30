@@ -14,15 +14,15 @@ For instance, such expression:
 
 ```haskell
 omega = (\x -> x x) (\x -> x x)
-foo(x, y) = y 
 ```
 
-Will diverge in OCaml while it will not in Haskell.
+Will diverge in a strict evaluation strategy while it will not in a
+lazy strategy.
 
 ## Lazinize
 
-Lazinize show you how to transform OCaml evaluation strategy into
-Haskell one. It models a minimalistic pure functional programming
+Lazinize show you how to transform strict evaluation strategy into
+lazy one. It models a minimalistic pure functional programming
 language:
 
 ```ocaml
@@ -38,7 +38,7 @@ type value = VClos of term * env
 and env = value list
 ```
 
-The function `be_lazy` transforms a `term` into another one, but lazinized.
+The function `lazinize` transforms a `term` into another one, but lazinized.
 
 ## Examples
 
@@ -47,7 +47,7 @@ let _ =
   let omega = (TApp (TLam (TApp (TVar 1, TVar 1)), 
 		     TLam (TApp (TVar 1, TVar 1)))) in
   let t = TApp (TLam (TLam (TVar 1)), omega) in
-  eval (be_lazy t) []
+  eval (lazinize t) []
 ```
 
 This example shows that the execution does not diverge as excepted in
