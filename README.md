@@ -40,7 +40,7 @@ and env = value list
 
 The function `lazinize` transforms a `term` into another one, but lazinized.
 
-## Examples
+## Example
 
 ```
 let _ = 
